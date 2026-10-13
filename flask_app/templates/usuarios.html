@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+<div class="fila">
+
+    <!-- Formulario de Registro -->
+    <div class="bloque">
+        <h2>Registro</h2>
+
+        {% with mensajes = get_flashed_messages(category_filter=["registro"]) %}
+            {% if mensajes %}
+                <ul class="errores">
+                    {% for msj in mensajes %}
+                        <li>{{ msj }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('registrar') }}" method="POST" class="formulario">
+            <div class="campo">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" required>
+            </div>
+
+            <div class="campo">
+                <label for="apellido">Apellido</label>
+                <input type="text" id="apellido" name="apellido" required>
+            </div>
+
+            <div class="campo">
+                <label for="email_reg">E-mail</label>
+                <input type="email" id="email_reg" name="email" required>
+            </div>
+
+            <div class="campo">
+                <label for="pass_reg">Contraseña</label>
+                <input type="password" id="pass_reg" name="password" required>
+            </div>
+
+            <div class="campo">
+                <label for="confirm">Conf. Contraseña</label>
+                <input type="password" id="confirm" name="confirm_password" required>
+            </div>
+
+            <div class="acciones">
+                <button type="submit" class="boton">Registrar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Formulario de Inicio de Sesion -->
+    <div class="bloque">
+        <h2>Inicio de Sesión</h2>
+
+        {% with mensajes = get_flashed_messages(category_filter=["login"]) %}
+            {% if mensajes %}
+                <ul class="errores">
+                    {% for msj in mensajes %}
+                        <li>{{ msj }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('login') }}" method="POST" class="formulario">
+            <div class="campo">
+                <label for="email_log">E-mail</label>
+                <input type="email" id="email_log" name="email" required>
+            </div>
+
+            <div class="campo">
+                <label for="pass_log">Contraseña</label>
+                <input type="password" id="pass_log" name="password" required>
+            </div>
+
+            <div class="acciones">
+                <button type="submit" class="boton">Iniciar Sesión</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+{% endblock %}

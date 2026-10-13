@@ -1,1 +1,0 @@
-# Examen_CinePedia_Soto_Elisa_2026_10_13
