@@ -1,13 +1,84 @@
 {% extends "base.html" %}
 
-{% block title %}A Web Page{% endblock %}
-
 {% block content %}
-<div class="pantalla">
-    <h1>Bienvenido {{ usuario.nombre }}</h1>
+<div class="fila">
 
-    <div class="enlace">
-        <a href="{{ url_for('logout') }}">Cerrar Sesión</a>
+    <!-- Formulario de Registro -->
+    <div class="bloque">
+        <h2>Registro</h2>
+
+        {% with mensajes = get_flashed_messages(category_filter=["registro"]) %}
+            {% if mensajes %}
+                <ul class="errores">
+                    {% for m in mensajes %}
+                        <li>{{ m }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('registrar') }}" method="POST" class="formulario">
+            <div class="campo">
+                <label for="reg_nombre">Nombre</label>
+                <input type="text" id="reg_nombre" name="nombre" required>
+            </div>
+
+            <div class="campo">
+                <label for="reg_apellido">Apellido</label>
+                <input type="text" id="reg_apellido" name="apellido" required>
+            </div>
+
+            <div class="campo">
+                <label for="reg_email">E-mail</label>
+                <input type="email" id="reg_email" name="email" required>
+            </div>
+
+            <div class="campo">
+                <label for="reg_pass">Contraseña</label>
+                <input type="password" id="reg_pass" name="password" required>
+            </div>
+
+            <div class="campo">
+                <label for="reg_conf">Conf. Contraseña</label>
+                <input type="password" id="reg_conf" name="confirm_password" required>
+            </div>
+
+            <div class="acciones">
+                <button type="submit" class="boton">Registrar</button>
+            </div>
+        </form>
     </div>
+
+    <!-- Formulario de Inicio de Sesion -->
+    <div class="bloque">
+        <h2>Inicio de Sesión</h2>
+
+        {% with mensajes = get_flashed_messages(category_filter=["login"]) %}
+            {% if mensajes %}
+                <ul class="errores">
+                    {% for m in mensajes %}
+                        <li>{{ m }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('login') }}" method="POST" class="formulario">
+            <div class="campo">
+                <label for="log_email">E-mail</label>
+                <input type="email" id="log_email" name="email" required>
+            </div>
+
+            <div class="campo">
+                <label for="log_pass">Contraseña</label>
+                <input type="password" id="log_pass" name="password" required>
+            </div>
+
+            <div class="acciones">
+                <button type="submit" class="boton">Iniciar Sesión</button>
+            </div>
+        </form>
+    </div>
+
 </div>
 {% endblock %}

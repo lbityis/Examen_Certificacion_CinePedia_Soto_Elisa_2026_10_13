@@ -1,46 +1,41 @@
-import pymysql.cursors
 import os
-from dotenv import load_dotenv
+import pymysql.cursors
 
-# Variables de entorno
-load_dotenv()
-
-# CLASE DE CONEXIÓN MYSQL
-
-class MySQLConnection:
-    def __init__(self, db):
-        connection = pymysql.connect(
-            host=os.environ.get('MYSQL_HOST'),
-            user=os.environ.get('MYSQL_USER'),
-            password=os.environ.get('MYSQL_PASSWORD'),
-            db=db,
-            charset='utf8mb4',
+class ConexionMySQL:
+    def __init__(self, bd):
+        # Parametros de conexion leidos desde variables de entorno
+        host = os.getenv("MYSQL_HOST", "localhost")
+        user = os.getenv("MYSQL_USER", "root")
+        password = os.getenv("MYSQL_PASSWORD", "")
+        
+        self.conexion = pymysql.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=bd,
+            charset="utf8mb4",
             cursorclass=pymysql.cursors.DictCursor,
             autocommit=True
         )
-        self.connection = connection
 
-    # MÉTODO PARA REALIZAR LAS CONSULTAS
-    def query_db(self, query, data=None):
-        with self.connection.cursor() as cursor:
+    def consultar_bd(self, consulta, datos=None):
+        with self.conexion.cursor() as cursor:
             try:
-                query = cursor.mogrify(query, data)
-                print(f"Ejecutando Consulta: {query}")
-                cursor.execute(query, data)
-                
-                if query.lower().find("insert") >= 0:
-                    self.connection.commit()
+                cursor.execute(consulta, datos or {})
+                sql = consulta.strip().lower()
+
+                if sql.startswith("select"):
+                    return cursor.fetchall()
+                if sql.startswith("insert"):
                     return cursor.lastrowid
-                elif query.lower().find("select") >= 0:
-                    result = cursor.fetchall()
-                    return result
-                else:
-                    self.connection.commit()
+                return cursor.rowcount
             except Exception as e:
-                print(f"Error en la Base de Datos: {e}")
+                print("Error en SQL:", e)
                 return False
             finally:
-                self.connection.close()
+                self.conexion.close()
 
-def connect_to_mysql(db):
-    return MySQLConnection(db)
+def conectar_mysql(bd=None):
+    if bd is None:
+        bd = os.getenv("MYSQL_DB", "esquema_cinepedia")
+    return ConexionMySQL(bd)

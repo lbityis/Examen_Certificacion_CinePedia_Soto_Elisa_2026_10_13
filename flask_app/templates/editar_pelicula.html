@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="tarjeta">
+    <div class="encabezado">
+        <h2>Editar Película</h2>
+        <a href="{{ url_for('dashboard') }}">Inicio</a>
+    </div>
+
+    {% with mensajes = get_flashed_messages(category_filter=["pelicula"]) %}
+        {% if mensajes %}
+            <ul class="errores">
+                {% for m in mensajes %}
+                    <li>{{ m }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('actualizar_pelicula', id=pelicula.id) }}" method="POST" class="formulario">
+        <div class="campo">
+            <label for="titulo">Nombre de Peli:</label>
+            <input type="text" id="titulo" name="titulo" value="{{ datos_previos.get('titulo', pelicula.titulo) }}">
+        </div>
+
+        <div class="campo">
+            <label for="director">Director:</label>
+            <input type="text" id="director" name="director" value="{{ datos_previos.get('director', pelicula.director) }}">
+        </div>
+
+        <div class="campo">
+            <label for="fecha">Fecha Estreno:</label>
+            <input type="date" id="fecha" name="fecha_estreno" value="{{ datos_previos.get('fecha_estreno', pelicula.fecha_estreno) }}">
+        </div>
+
+        <div class="campo-bloque">
+            <label for="sinopsis">Sinopsis:</label>
+            <textarea id="sinopsis" name="sinopsis" rows="4">{{ datos_previos.get('sinopsis', pelicula.sinopsis) }}</textarea>
+        </div>
+
+        <div class="acciones">
+            <button type="submit" class="boton">Guardar Película</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
