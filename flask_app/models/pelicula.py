@@ -3,6 +3,7 @@ from flask_app.config.mysqlconnection import conectar_mysql
 
 class Pelicula:
     def __init__(self, datos):
+        # Mapeo de columnas de la tabla peliculas
         self.id = datos['id']
         self.titulo = datos['titulo']
         self.director = datos['director']
@@ -11,10 +12,12 @@ class Pelicula:
         self.usuario_id = datos['usuario_id']
         self.created_at = datos['created_at']
         self.updated_at = datos['updated_at']
+        # Guardar el nombre del creador enviado por la consulta SQL
         self.creador = datos.get('creador', '')
 
     @classmethod
     def guardar(cls, datos):
+        # Guardar una nueva pelicula asociada al usuario en sesion
         query = """
             INSERT INTO peliculas (titulo, director, fecha_estreno, sinopsis, usuario_id)
             VALUES (%(titulo)s, %(director)s, %(fecha_estreno)s, %(sinopsis)s, %(usuario_id)s);
@@ -23,6 +26,7 @@ class Pelicula:
 
     @classmethod
     def obtener_todas(cls):
+        # Traer todas las peliculas junto con el nombre de su creador
         query = """
             SELECT peliculas.*, usuarios.nombre AS creador 
             FROM peliculas 
@@ -37,6 +41,7 @@ class Pelicula:
 
     @classmethod
     def obtener_por_id(cls, pelicula_id):
+        # Buscar una pelicula especifica por id
         query = """
             SELECT peliculas.*, usuarios.nombre AS creador 
             FROM peliculas 
@@ -50,6 +55,7 @@ class Pelicula:
 
     @classmethod
     def obtener_por_titulo(cls, titulo):
+        # Buscar por titulo para la validacion de unicidad
         query = "SELECT * FROM peliculas WHERE titulo = %(titulo)s;"
         resultados = conectar_mysql().consultar_bd(query, {"titulo": titulo})
         if not resultados:
@@ -58,6 +64,7 @@ class Pelicula:
 
     @classmethod
     def actualizar(cls, datos):
+        # Actualizar la informacion de una pelicula
         query = """
             UPDATE peliculas 
             SET titulo = %(titulo)s, director = %(director)s, 
@@ -68,11 +75,13 @@ class Pelicula:
 
     @classmethod
     def eliminar(cls, pelicula_id):
+        # Eliminar una pelicula por id
         query = "DELETE FROM peliculas WHERE id = %(id)s;"
         return conectar_mysql().consultar_bd(query, {"id": pelicula_id})
 
     @staticmethod
     def validar_pelicula(form, pelicula_id=None):
+        # Validar los campos al crear o editar
         es_valido = True
 
         titulo = form.get("titulo", "").strip()
@@ -80,24 +89,28 @@ class Pelicula:
         fecha = form.get("fecha_estreno", "").strip()
         sinopsis = form.get("sinopsis", "").strip()
 
+        # Validacion del titulo
         if len(titulo) < 3:
             flash("El nombre de la película debe tener al menos 3 caracteres.", "pelicula")
             es_valido = False
         else:
-            # Validacion BONUS: Titulo unico
+            # Revisar que el titulo sea unico
             existente = Pelicula.obtener_por_titulo(titulo)
             if existente and (pelicula_id is None or str(existente.id) != str(pelicula_id)):
                 flash("El nombre de la película debe ser único.", "pelicula")
                 es_valido = False
 
+        # Validacion del director
         if len(director) < 3:
             flash("El director debe tener al menos 3 caracteres.", "pelicula")
             es_valido = False
 
+        # Validacion de fecha
         if not fecha:
             flash("La fecha de estreno no puede estar vacía.", "pelicula")
             es_valido = False
 
+        # Validacion de sinopsis
         if len(sinopsis) < 3:
             flash("La sinopsis no puede estar vacía y debe tener al menos 3 caracteres.", "pelicula")
             es_valido = False

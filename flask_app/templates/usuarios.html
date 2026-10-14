@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
+<!-- Pagina principal del dashboard -->
 <div class="panel">
     <h2>Bienvenido, {{ session['nombre'] }}</h2>
 
+    <!-- Tabla con el listado de peliculas -->
     <table class="tabla">
         <thead>
             <tr>
@@ -21,6 +23,7 @@
                     <td>{{ peli.fecha_estreno }}</td>
                     <td class="opciones">
                         <a href="{{ url_for('ver_pelicula', id=peli.id) }}">Ver</a>
+                        <!-- Solo mostrar editar/borrar si el usuario es el creador -->
                         {% if peli.usuario_id == session['usuario_id'] %}
                             <a href="{{ url_for('editar_pelicula', id=peli.id) }}">Editar</a>
                             <a href="{{ url_for('borrar_pelicula', id=peli.id) }}">Borrar</a>

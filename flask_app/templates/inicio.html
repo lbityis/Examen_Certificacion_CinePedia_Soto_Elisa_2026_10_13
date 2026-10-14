@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
+<!-- Distribucion en dos columnas para Registro e Inicio de sesion -->
 <div class="fila">
 
     <!-- Formulario de Registro -->
     <div class="bloque">
         <h2>Registro</h2>
 
+        <!-- Despliegue de errores de registro -->
         {% with mensajes = get_flashed_messages(category_filter=["registro"]) %}
             {% if mensajes %}
                 <ul class="errores">
@@ -53,6 +55,7 @@
     <div class="bloque">
         <h2>Inicio de Sesión</h2>
 
+        <!-- Despliegue de errores de login -->
         {% with mensajes = get_flashed_messages(category_filter=["login"]) %}
             {% if mensajes %}
                 <ul class="errores">

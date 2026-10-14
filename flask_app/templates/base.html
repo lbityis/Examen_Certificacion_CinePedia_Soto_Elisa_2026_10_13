@@ -4,20 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CinePedia</title>
+    <!-- Importar la fuente Nunito -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Hoja de estilos -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+    <!-- Contenedor principal de la aplicacion -->
     <main class="marco">
-        <header class="barra">
-            <h1 class="logo">CinePedia</h1>
-            {% if session.get('usuario_id') %}
-                <nav class="navegacion">
-                    <a href="{{ url_for('nueva_pelicula') }}">Nueva Peli</a>
-                    <a href="{{ url_for('logout') }}">Cerrar Sesión</a>
-                </nav>
-            {% endif %}
-        </header>
+        <!-- Navegacion superior si el usuario tiene sesion activa -->
+        {% if session.get('usuario_id') %}
+            <nav class="navegacion">
+                <a href="{{ url_for('nueva_pelicula') }}">✦ Nueva Peli</a>
+                <a href="{{ url_for('logout') }}">✦ Cerrar Sesión</a>
+            </nav>
+        {% endif %}
 
+        <!-- Bloque de contenido dinamico -->
         <section class="contenido">
             {% block content %}{% endblock %}
         </section>

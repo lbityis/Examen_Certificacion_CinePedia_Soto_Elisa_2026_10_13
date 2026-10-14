@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
+<!-- Formulario para editar película -->
 <div class="tarjeta">
     <div class="encabezado">
         <h2>Editar Película</h2>
         <a href="{{ url_for('dashboard') }}">Inicio</a>
     </div>
 
+    <!-- Mensajes de error en la edición -->
     {% with mensajes = get_flashed_messages(category_filter=["pelicula"]) %}
         {% if mensajes %}
             <ul class="errores">
@@ -33,6 +35,7 @@
             <input type="date" id="fecha" name="fecha_estreno" value="{{ datos_previos.get('fecha_estreno', pelicula.fecha_estreno) }}">
         </div>
 
+        <!-- Mantiene la sinopsis ingresada o trae la original de la bd -->
         <div class="campo-bloque">
             <label for="sinopsis">Sinopsis:</label>
             <textarea id="sinopsis" name="sinopsis" rows="4">{{ datos_previos.get('sinopsis', pelicula.sinopsis) }}</textarea>

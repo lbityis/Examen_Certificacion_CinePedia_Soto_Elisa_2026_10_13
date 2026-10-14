@@ -1,18 +1,21 @@
-from flask import render_template, request, redirect, url_for, session, flash
+from flask import render_template, request, redirect, url_for, session
 from flask_app import app
 from flask_app.models.pelicula import Pelicula
 from flask_app.models.comentario import Comentario
 
 @app.route("/cine")
 def dashboard():
+    # Proteger ruta para usuarios logueados
     if "usuario_id" not in session:
         return redirect(url_for("inicio"))
 
+    # Cargar la lista completa de peliculas
     peliculas = Pelicula.obtener_todas()
     return render_template("usuarios.html", peliculas=peliculas)
 
 @app.route("/cine/nueva")
 def nueva_pelicula():
+    # Formulario para registrar una pelicula
     if "usuario_id" not in session:
         return redirect(url_for("inicio"))
 
@@ -20,11 +23,12 @@ def nueva_pelicula():
 
 @app.route("/cine/crear", methods=["POST"])
 def crear_pelicula():
+    # Procesar creacion de la pelicula
     if "usuario_id" not in session:
         return redirect(url_for("inicio"))
 
+    # Si hay error, se mantiene la sinopsis e informacion cargada
     if not Pelicula.validar_pelicula(request.form):
-        # BONUS: Mantiene la sinopsis y datos ingresados en el formulario si hay errores
         return render_template("nueva_pelicula.html", datos_previos=request.form)
 
     datos = {
@@ -40,6 +44,7 @@ def crear_pelicula():
 
 @app.route("/cine/<int:id>")
 def ver_pelicula(id):
+    # Ver detalle individual y lista de comentarios
     if "usuario_id" not in session:
         return redirect(url_for("inicio"))
 
@@ -52,11 +57,12 @@ def ver_pelicula(id):
 
 @app.route("/cine/editar/<int:id>")
 def editar_pelicula(id):
+    # Formulario para editar pelicula
     if "usuario_id" not in session:
         return redirect(url_for("inicio"))
 
     pelicula = Pelicula.obtener_por_id(id)
-    # Solo el creador puede acceder a editar
+    # Verificar que solo el creador pueda ingresar
     if not pelicula or pelicula.usuario_id != session["usuario_id"]:
         return redirect(url_for("dashboard"))
 
@@ -64,6 +70,7 @@ def editar_pelicula(id):
 
 @app.route("/cine/actualizar/<int:id>", methods=["POST"])
 def actualizar_pelicula(id):
+    # Guardar cambios de la edicion
     if "usuario_id" not in session:
         return redirect(url_for("inicio"))
 
@@ -87,11 +94,11 @@ def actualizar_pelicula(id):
 
 @app.route("/cine/borrar/<int:id>")
 def borrar_pelicula(id):
+    # Eliminar pelicula si pertenece al usuario en sesion
     if "usuario_id" not in session:
         return redirect(url_for("inicio"))
 
     pelicula = Pelicula.obtener_por_id(id)
-    # Solo el creador puede eliminar
     if pelicula and pelicula.usuario_id == session["usuario_id"]:
         Pelicula.eliminar(id)
 

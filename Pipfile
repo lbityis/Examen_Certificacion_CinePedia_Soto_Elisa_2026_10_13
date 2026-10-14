@@ -4,8 +4,17 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+bcrypt = "==5.0.0"
+blinker = "==1.9.0"
+click = "==8.3.1"
+itsdangerous = "==2.2.0"
+jinja2 = "==3.1.6"
+markupsafe = "==3.0.3"
+werkzeug = "==3.1.5"
 flask = "*"
 pymysql = "*"
+flask-bcrypt = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
