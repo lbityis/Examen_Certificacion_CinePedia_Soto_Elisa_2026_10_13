@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<!-- Vista detallada de una película -->
 <div class="vista">
     <div class="encabezado">
         <h2>{{ pelicula.titulo }}</h2>
@@ -14,8 +15,9 @@
         <p><strong>Sinopsis:</strong> {{ pelicula.sinopsis }}</p>
     </div>
 
-    <!-- Seccion de Comentarios -->
+    <!-- Seccion de comentarios -->
     <div class="comentarios">
+        <!-- Ocultar caja de comentarios si el usuario es el creador de la película -->
         {% if pelicula.usuario_id != session['usuario_id'] %}
             <form action="{{ url_for('crear_comentario', pelicula_id=pelicula.id) }}" method="POST" class="caja-comentario">
                 <input type="text" name="contenido" placeholder="Escribe un comentario..." required>
@@ -23,6 +25,7 @@
             </form>
         {% endif %}
 
+        <!-- Despliegue de lista de comentarios -->
         <div class="lista-comentarios">
             {% for com in comentarios %}
                 <div class="comentario-item">
@@ -30,6 +33,7 @@
                         <strong>{{ com.autor }} - {{ com.created_at.strftime('%d de %B') }}</strong>
                         <p>{{ com.contenido }}</p>
                     </div>
+                    <!-- Solo mostrar boton de borrar al autor del comentario -->
                     {% if com.usuario_id == session['usuario_id'] %}
                         <a href="{{ url_for('borrar_comentario', comentario_id=com.id, pelicula_id=pelicula.id) }}" class="boton-borrar">Borrar</a>
                     {% endif %}
